@@ -20,13 +20,13 @@ module.exports = {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_ID}`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
-    /*
     mumbai: {
       // Infura
       // url: `https://polygon-mumbai.infura.io/v3/${infuraId}`
-      url: "https://rpc-mumbai.matic.today",
-      accounts: [privateKey]
+      url: process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_ENDPOINT,
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
+    /*
     matic: {
       // Infura
       // url: `https://polygon-mainnet.infura.io/v3/${infuraId}`,

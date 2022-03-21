@@ -5,8 +5,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-import "hardhat/console.sol";
+import "./NFT.sol";
 
 contract NFTMarket is ReentrancyGuard, Ownable {
     using Counters for Counters.Counter;
@@ -14,7 +13,11 @@ contract NFTMarket is ReentrancyGuard, Ownable {
     Counters.Counter private _itemsSold;
 
     uint256 listingPrice = 0.001 ether;
-
+        struct colectionStruct {
+            NFT nftCollection;
+            string name;
+            string symbol;
+        }
     struct MarketItem {
         uint256 itemId;
         address nftContract;
@@ -26,6 +29,13 @@ contract NFTMarket is ReentrancyGuard, Ownable {
     }
 
     mapping(uint256 => MarketItem) private idToMarketItem;
+
+    struct NftCollection{
+        NFT nft;
+
+    }
+    mapping(address => NftCollection[]) addreesToNftCollection;
+    
 
     event MarketItemCreated(
         uint256 indexed itemId,
@@ -92,7 +102,7 @@ contract NFTMarket is ReentrancyGuard, Ownable {
         payable(msg.sender).transfer(listingPrice);
     }
 
-    function createMarketSale(address nftContract, uint256 itemId)
+    function buyMarketItem(address nftContract, uint256 itemId)
         public
         payable
         nonReentrant
@@ -113,7 +123,7 @@ contract NFTMarket is ReentrancyGuard, Ownable {
     }
 
     /* Returns all unsold market items with address(0) */
-    function fetchMarketItems() public view returns (MarketItem[] memory) {
+    function fetchAllListedItems() public view returns (MarketItem[] memory) {
         uint256 itemCount = _itemIds.current();
         uint256 unsoldItemCount = _itemIds.current() - _itemsSold.current();
         uint256 currentIndex = 0;
@@ -131,7 +141,7 @@ contract NFTMarket is ReentrancyGuard, Ownable {
     }
 
     /* Returns onlyl items that a user has purchased */
-    function fetchMyNFTs() public view returns (MarketItem[] memory) {
+    function fetchMyPurchasedItems() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _itemIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
@@ -154,8 +164,8 @@ contract NFTMarket is ReentrancyGuard, Ownable {
         return items;
     }
 
-    /* Returns only items a user has created */
-    function fetchItemsCreated() public view returns (MarketItem[] memory) {
+    /* Returns only items a user has listed for sale */
+    function fetchMyListedItems() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _itemIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
@@ -178,8 +188,21 @@ contract NFTMarket is ReentrancyGuard, Ownable {
         return items;
     }
 
-    function withdraw() public payable onlyOwner {
-        require(address(this).balance > 0, "zero balance");
-        payable(owner()).transfer(address(this).balance);
+    function getCollectionListByUser() public view returns(colectionStruct[] memory){
+        colectionStruct[] memory list= new colectionStruct[](addreesToNftCollection[msg.sender].length);
+        for (uint256 i =0 ; i < addreesToNftCollection[msg.sender].length ; i++){
+            NFT nft= NFT(address(addreesToNftCollection[msg.sender][i].nft));
+            colectionStruct memory struc = colectionStruct(nft, nft.name(), nft.symbol());
+            list[i]= struc;
+        }
+        return list;
+    }
+    function createCollection (address marketplaceAddress, string memory name, string memory symbol) public {
+        NFT nftCollection = new NFT(marketplaceAddress,name, symbol);
+        addreesToNftCollection[msg.sender].push(NftCollection(nftCollection));
+    }
+    function getCollectionName (uint256 index) public view returns (string memory){
+       NFT nft= NFT(address(addreesToNftCollection[msg.sender][index].nft));
+       return nft.name();
     }
 }

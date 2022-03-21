@@ -28,14 +28,6 @@ const NavBar = ({ connect }) => {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
-            ether-nity
-          </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size='large'
@@ -78,15 +70,14 @@ const NavBar = ({ connect }) => {
                   <Typography textAlign='center'>My assets</Typography>
                 </Link>
               </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link href='/collections'>
+                  <Typography textAlign='center'>collections</Typography>
+                </Link>
+              </MenuItem>
             </Menu>
           </Box>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            ether-nity
-          </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Link href='/'>
               <Button
@@ -107,6 +98,13 @@ const NavBar = ({ connect }) => {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}>
                 My assets
+              </Button>
+            </Link>
+            <Link href='/collections'>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}>
+                collections
               </Button>
             </Link>
           </Box>

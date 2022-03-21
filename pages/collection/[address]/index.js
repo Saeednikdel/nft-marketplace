@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   Box,
   Grid,
@@ -10,13 +11,15 @@ import {
   CardActionArea,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { fetchNFTs } from "../utils/fetchNFTs";
+import { fetchNFTs } from "../../../utils/fetchNFTs";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Link from "next/link";
 
-const myassets = () => {
+const collection = () => {
   const [NFTs, setNFTs] = useState();
+  const router = useRouter();
+  const { address } = router.query;
 
   useEffect(() => {
     loadNFTs();
@@ -27,13 +30,9 @@ const myassets = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const { chainId } = await provider.getNetwork();
     const signer = provider.getSigner();
-    const address = await signer.getAddress();
-    if (address) {
-      const data = await fetchNFTs(
-        address,
-        chainId
-        // "0x34F86F47b943ABA644Ca1a5A55424d109029dF65"
-      );
+    const signerAddress = await signer.getAddress();
+    if (signerAddress) {
+      const data = await fetchNFTs(signerAddress, chainId, address);
       setNFTs(data);
     }
   }
@@ -91,4 +90,4 @@ const myassets = () => {
     </Box>
   );
 };
-export default myassets;
+export default collection;

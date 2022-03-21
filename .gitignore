@@ -5,9 +5,10 @@
 /.pnp
 .pnp.js
 config.js
+rinkeby.js
 # testing
 /coverage
-
+/.vscode/
 # next.js
 /.next/
 /out/

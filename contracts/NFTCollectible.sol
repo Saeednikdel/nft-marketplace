@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
+
 
 contract NFTCollectible is ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
@@ -13,7 +13,7 @@ contract NFTCollectible is ERC721Enumerable, Ownable {
     address contractAddress;
     mapping(uint256 => string) private _tokenURIs;
 
-    constructor(address marketplaceAddress) ERC721("NFT Collectible", "NFTC") {
+    constructor(address marketplaceAddress) ERC721("Ether-nity Collectible", "ETHC") {
         contractAddress = marketplaceAddress;
     }
 
