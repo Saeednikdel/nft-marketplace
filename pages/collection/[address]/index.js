@@ -15,15 +15,18 @@ import { fetchNFTs } from "../../../utils/fetchNFTs";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Link from "next/link";
+import NewItem from "../../../components/NewItem";
+import Popup from "../../../components/Popup";
 
 const collection = () => {
   const [NFTs, setNFTs] = useState();
+  const [openPopup, setOpenPopup] = useState(false);
   const router = useRouter();
   const { address } = router.query;
 
   useEffect(() => {
     loadNFTs();
-  }, []);
+  }, [openPopup, address]);
   async function loadNFTs() {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -31,13 +34,20 @@ const collection = () => {
     const { chainId } = await provider.getNetwork();
     const signer = provider.getSigner();
     const signerAddress = await signer.getAddress();
-    if (signerAddress) {
+    if (address) {
       const data = await fetchNFTs(signerAddress, chainId, address);
       setNFTs(data);
     }
   }
   return (
     <Box sx={{ width: "100%" }} style={{ marginTop: 30, marginBottom: 60 }}>
+      <Button
+        color='secondary'
+        variant='contained'
+        style={{ marginTop: 30 }}
+        onClick={() => setOpenPopup(true)}>
+        new
+      </Button>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {NFTs ? (
           NFTs.map((NFT, i) => {
@@ -65,12 +75,14 @@ const collection = () => {
                   </CardContent>
 
                   <CardActions>
-                    <Button size='small'>{`${NFT.value.contractAddress.slice(
-                      0,
-                      4
-                    )}...${NFT.value.contractAddress.slice(
-                      NFT.value.contractAddress.length - 4
-                    )}`}</Button>
+                    <Link href={`/collection/${NFT.value.contractAddress}`}>
+                      <Button size='small'>{`${NFT.value.contractAddress.slice(
+                        0,
+                        4
+                      )}...${NFT.value.contractAddress.slice(
+                        NFT.value.contractAddress.length - 4
+                      )}`}</Button>
+                    </Link>
                     <Button size='small'>{Number(NFT.value.id)}</Button>
                     <Link
                       href={`/item/${NFT.value.contractAddress}/${Number(
@@ -87,6 +99,12 @@ const collection = () => {
           <h3>No NFT Item found</h3>
         )}
       </Grid>
+      <Popup
+        title={"new item"}
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}>
+        <NewItem setOpenPopup={setOpenPopup} address={address} />
+      </Popup>
     </Box>
   );
 };

@@ -66,12 +66,14 @@ const myassets = () => {
                   </CardContent>
 
                   <CardActions>
-                    <Button size='small'>{`${NFT.value.contractAddress.slice(
-                      0,
-                      4
-                    )}...${NFT.value.contractAddress.slice(
-                      NFT.value.contractAddress.length - 4
-                    )}`}</Button>
+                    <Link href={`/collection/${NFT.value.contractAddress}`}>
+                      <Button size='small'>{`${NFT.value.contractAddress.slice(
+                        0,
+                        4
+                      )}...${NFT.value.contractAddress.slice(
+                        NFT.value.contractAddress.length - 4
+                      )}`}</Button>
+                    </Link>
                     <Button size='small'>{Number(NFT.value.id)}</Button>
                     <Link
                       href={`/item/${NFT.value.contractAddress}/${Number(
