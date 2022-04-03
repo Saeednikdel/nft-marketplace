@@ -16,7 +16,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Link from "next/link";
 
-const item = () => {
+const item = ({ signer, provider }) => {
   const [NFT, setNFT] = useState();
   const router = useRouter();
   const { address, id } = router.query;
@@ -24,11 +24,8 @@ const item = () => {
     loadNFTs();
   }, [address, id]);
   async function loadNFTs() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
     const { chainId } = await provider.getNetwork();
-    const signer = provider.getSigner();
+
     const signerAddress = await signer.getAddress();
 
     if (address) {
@@ -42,10 +39,10 @@ const item = () => {
       {NFT ? (
         <Card>
           <Grid container>
-            <Grid xs={12} md={6}>
+            <Grid item xs={12} md={6}>
               <CardMedia component='img' image={NFT.image} alt={NFT.title} />
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid item xs={12} md={6}>
               <CardContent>
                 <Typography gutterBottom variant='h5' component='div'>
                   {NFT.title}

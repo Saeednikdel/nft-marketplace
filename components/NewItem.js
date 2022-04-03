@@ -1,16 +1,11 @@
-import { Box, Grid, Card, CardActions, Button, TextField } from "@mui/material";
+import { Box, CardActions, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 import { styled } from "@mui/material/styles";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
-
-import { nftmarketaddress } from "../config";
-
 import NFT from "../artifacts/contracts/NFTCollectible.sol/NFTCollectible.json";
-import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 const Input = styled("input")({
   display: "none",
@@ -18,12 +13,11 @@ const Input = styled("input")({
 const NewItem = ({ address, setOpenPopup }) => {
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
-    price: "",
     name: "",
     description: "",
   });
-  const router = useRouter();
-  async function onChange(e) {
+
+  async function uploadImage(e) {
     const file = e.target.files[0];
     try {
       const added = await client.add(file, {
@@ -35,11 +29,10 @@ const NewItem = ({ address, setOpenPopup }) => {
       console.log("Error uploading file: ", error);
     }
   }
-  async function createMarket() {
-    const { name, description, price } = formInput;
-    console.log(name, description, price, fileUrl);
-    if (!name || !description || !price || !fileUrl) return;
-    /* first, upload to IPFS */
+  async function createIpfsUrl() {
+    const { name, description } = formInput;
+    console.log(name, description, fileUrl);
+    if (!name || !description || !fileUrl) return;
     const data = JSON.stringify({
       name,
       description,
@@ -48,40 +41,22 @@ const NewItem = ({ address, setOpenPopup }) => {
     try {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      createSale(url);
+      createItem(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
   }
 
-  async function createSale(url) {
+  async function createItem(url) {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    /* next, create the item */
     let contract = new ethers.Contract(address, NFT.abi, signer);
     let transaction = await contract.createToken(url);
     let tx = await transaction.wait();
-    let event = tx.events[0];
-    let value = event.args[2];
-    let tokenId = value.toNumber();
-
-    const price = ethers.utils.parseUnits(formInput.price, "ether");
-
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-
-    transaction = await contract.listingItemForSale(address, tokenId, price, {
-      value: listingPrice,
-    });
-    await transaction.wait();
     setOpenPopup(false);
-    // router.push("/");
   }
   return (
     <>
@@ -113,25 +88,13 @@ const NewItem = ({ address, setOpenPopup }) => {
             }
           />
         </div>
-        <div>
-          <TextField
-            type='number'
-            name='price'
-            label='price'
-            placeholder='price'
-            style={{ margin: 20 }}
-            onChange={(e) =>
-              updateFormInput({ ...formInput, price: e.target.value })
-            }
-          />
-        </div>
         <label style={{ margin: 20 }} htmlFor='contained-button-file'>
           <Input
             accept='image/*'
             id='contained-button-file'
             // multiple
             type='file'
-            onChange={onChange}
+            onChange={uploadImage}
           />
           <Button variant='contained' component='span'>
             Upload
@@ -146,7 +109,7 @@ const NewItem = ({ address, setOpenPopup }) => {
           <Button
             variant='contained'
             style={{ margin: 20 }}
-            onClick={createMarket}>
+            onClick={createIpfsUrl}>
             mint nft
           </Button>
         </CardActions>

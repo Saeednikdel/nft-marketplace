@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
-import Web3Modal from "web3modal";
 import { styled } from "@mui/material/styles";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -15,7 +14,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 const Input = styled("input")({
   display: "none",
 });
-const create = () => {
+const create = ({ signer }) => {
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
     price: "",
@@ -39,7 +38,7 @@ const create = () => {
     const { name, description, price } = formInput;
     console.log(name, description, price, fileUrl);
     if (!name || !description || !price || !fileUrl) return;
-    /* first, upload to IPFS */
+
     const data = JSON.stringify({
       name,
       description,
@@ -48,7 +47,7 @@ const create = () => {
     try {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+
       createSale(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
@@ -56,12 +55,6 @@ const create = () => {
   }
 
   async function createSale(url) {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    /* next, create the item */
     let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
     let transaction = await contract.createToken(url);
     let tx = await transaction.wait();

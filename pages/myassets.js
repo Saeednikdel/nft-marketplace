@@ -7,26 +7,19 @@ import {
   CardMedia,
   Button,
   Typography,
-  CardActionArea,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { fetchNFTs } from "../utils/fetchNFTs";
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
 import Link from "next/link";
 
-const myassets = () => {
+const myassets = ({ signer, provider }) => {
   const [NFTs, setNFTs] = useState();
 
   useEffect(() => {
     loadNFTs();
   }, []);
   async function loadNFTs() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
     const { chainId } = await provider.getNetwork();
-    const signer = provider.getSigner();
     const address = await signer.getAddress();
     if (address) {
       const data = await fetchNFTs(

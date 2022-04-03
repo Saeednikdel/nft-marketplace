@@ -7,32 +7,25 @@ import {
   CardMedia,
   Button,
   Typography,
-  CardActionArea,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Web3Modal from "web3modal";
 import Link from "next/link";
 
-import { nftaddress, nftmarketaddress } from "../config";
+import { nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFTCollectible.sol/NFTCollectible.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-export default function Home() {
+export default function Home({ signer, provider }) {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
   useEffect(() => {
     loadNFTs();
   }, []);
   async function loadNFTs() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    console.log(provider);
-    // const signer = provider.getSigner();
     // const address = await signer.getAddress();
     const marketContract = new ethers.Contract(
       nftmarketaddress,
@@ -76,12 +69,7 @@ export default function Home() {
     }
   }
   async function buyNft(nft) {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
     const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
     const transaction = await contract.buyMarketItem(
       nft.nftContract,

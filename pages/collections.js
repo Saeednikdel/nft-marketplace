@@ -20,7 +20,7 @@ import { nftmarketaddress } from "../config";
 
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-const collctions = () => {
+const collctions = ({ signer }) => {
   const [collectionList, setCollectionList] = useState();
   const [openPopup, setOpenPopup] = useState(false);
   const router = useRouter();
@@ -29,14 +29,6 @@ const collctions = () => {
   }, [openPopup]);
 
   async function loadCollections() {
-    const web3Modal = new Web3Modal({
-      network: "mainnet",
-      cacheProvider: true,
-    });
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-    const address = await signer.getAddress();
     const marketContract = new ethers.Contract(
       nftmarketaddress,
       Market.abi,

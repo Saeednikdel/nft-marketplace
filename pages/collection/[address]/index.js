@@ -17,8 +17,11 @@ import Web3Modal from "web3modal";
 import Link from "next/link";
 import NewItem from "../../../components/NewItem";
 import Popup from "../../../components/Popup";
+import { nftmarketaddress } from "../../../config";
+import Market from "../../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-const collection = () => {
+const collection = ({ signer, provider }) => {
+  const [userOwnsCollectoin, setUserOwnsCollectoin] = useState(false);
   const [NFTs, setNFTs] = useState();
   const [openPopup, setOpenPopup] = useState(false);
   const router = useRouter();
@@ -28,27 +31,57 @@ const collection = () => {
     loadNFTs();
   }, [openPopup, address]);
   async function loadNFTs() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
     const { chainId } = await provider.getNetwork();
-    const signer = provider.getSigner();
     const signerAddress = await signer.getAddress();
     if (address) {
       const data = await fetchNFTs(signerAddress, chainId, address);
       setNFTs(data);
     }
+
+    const marketContract = new ethers.Contract(
+      nftmarketaddress,
+      Market.abi,
+      signer
+    );
+    try {
+      const data = await marketContract.getCollectionListByUser();
+      console.log("data", data);
+      const items = await Promise.all(
+        data.map(async (i) => {
+          let item = {
+            name: i.name,
+            symbol: i.symbol,
+            nftCollection: i.nftCollection,
+          };
+          return item;
+        })
+      );
+      console.log("Collection", items);
+      const x = items.find((i) => i.nftCollection === address);
+      if (x) {
+        setUserOwnsCollectoin(true);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   }
   return (
-    <Box sx={{ width: "100%" }} style={{ marginTop: 30, marginBottom: 60 }}>
-      <Button
-        color='secondary'
-        variant='contained'
+    <Box sx={{ width: "100%" }} style={{ marginTop: 10, marginBottom: 60 }}>
+      {userOwnsCollectoin && (
+        <Button
+          color='secondary'
+          variant='contained'
+          style={{ marginTop: 30 }}
+          onClick={() => setOpenPopup(true)}>
+          new
+        </Button>
+      )}
+
+      <Grid
+        container
         style={{ marginTop: 30 }}
-        onClick={() => setOpenPopup(true)}>
-        new
-      </Button>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        rowSpacing={1}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {NFTs ? (
           NFTs.map((NFT, i) => {
             return (
