@@ -13,7 +13,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 
-const NavBar = ({ connect }) => {
+const NavBar = ({ address, connect }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -108,6 +108,13 @@ const NavBar = ({ connect }) => {
               </Button>
             </Link>
           </Box>
+          {address ? (
+            `${address.slice(0, 4)}...${address.slice(address.length - 4)}`
+          ) : (
+            <Button variant='contained' color='secondary' onClick={connect}>
+              connect
+            </Button>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

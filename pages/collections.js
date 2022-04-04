@@ -71,7 +71,7 @@ const collctions = ({ signer }) => {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             {collectionList.map((collection, i) => (
-              <Grid key={i} item xs={6} md={4}>
+              <Grid key={i} item xs={12} sm={6} md={4}>
                 <Card sx={{ maxWidth: 345 }}>
                   <CardContent>
                     <Link href={`/collection/${collection.nftCollection}`}>

@@ -57,7 +57,12 @@ const collection = ({ signer, provider }) => {
         })
       );
       console.log("Collection", items);
-      const x = items.find((i) => i.nftCollection === address);
+      //// Attention remove .toLowerCase()
+      //// Attention remove .toLowerCase()
+      //// Attention remove .toLowerCase()
+      const x = items.find(
+        (i) => i.nftCollection.toLowerCase() === address.toLowerCase()
+      );
       if (x) {
         setUserOwnsCollectoin(true);
       }
@@ -85,7 +90,7 @@ const collection = ({ signer, provider }) => {
         {NFTs ? (
           NFTs.map((NFT, i) => {
             return (
-              <Grid key={i} item xs={6} md={4}>
+              <Grid key={i} item xs={12} sm={6} md={4}>
                 <Card sx={{ maxWidth: 345 }}>
                   <Link
                     href={`/item/${NFT.value.contractAddress}/${Number(

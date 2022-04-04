@@ -17,7 +17,6 @@ const Input = styled("input")({
 const create = ({ signer }) => {
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
-    price: "",
     name: "",
     description: "",
   });
@@ -35,9 +34,9 @@ const create = ({ signer }) => {
     }
   }
   async function createMarket() {
-    const { name, description, price } = formInput;
-    console.log(name, description, price, fileUrl);
-    if (!name || !description || !price || !fileUrl) return;
+    const { name, description } = formInput;
+
+    if (!name || !description || !fileUrl) return;
 
     const data = JSON.stringify({
       name,
@@ -57,28 +56,28 @@ const create = ({ signer }) => {
   async function createSale(url) {
     let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
     let transaction = await contract.createToken(url);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
-    let value = event.args[2];
-    let tokenId = value.toNumber();
+    // let tx = await transaction.wait();
+    // let event = tx.events[0];
+    // let value = event.args[2];
+    // let tokenId = value.toNumber();
 
-    const price = ethers.utils.parseUnits(formInput.price, "ether");
+    // const price = ethers.utils.parseUnits(formInput.price, "ether");
 
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
+    // /* then list the item for sale on the marketplace */
+    // contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    // let listingPrice = await contract.getListingPrice();
+    // listingPrice = listingPrice.toString();
 
-    transaction = await contract.listingItemForSale(
-      nftaddress,
-      tokenId,
-      price,
-      {
-        value: listingPrice,
-      }
-    );
-    await transaction.wait();
-    router.push("/");
+    // transaction = await contract.listingItemForSale(
+    //   nftaddress,
+    //   tokenId,
+    //   price,
+    //   {
+    //     value: listingPrice,
+    //   }
+    // );
+    // await transaction.wait();
+    router.push("/myassets");
   }
   return (
     <>
@@ -113,7 +112,7 @@ const create = ({ signer }) => {
                   }
                 />
               </div>
-              <div>
+              {/* <div>
                 <TextField
                   type='number'
                   name='price'
@@ -124,7 +123,7 @@ const create = ({ signer }) => {
                     updateFormInput({ ...formInput, price: e.target.value })
                   }
                 />
-              </div>
+              </div> */}
               <label style={{ margin: 20 }} htmlFor='contained-button-file'>
                 <Input
                   accept='image/*'

@@ -13,13 +13,16 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFTCollectible.sol/NFTCollectible.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-export default function Home({ signer, provider }) {
+export default function Home({ signer, provider, address }) {
+  const router = useRouter();
+
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
   useEffect(() => {
@@ -79,7 +82,17 @@ export default function Home({ signer, provider }) {
       }
     );
     await transaction.wait();
-    loadNFTs();
+    router.push("/myassets");
+  }
+
+  async function cancelSell(nft) {
+    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    const transaction = await contract.cancelListingItemForSale(
+      nft.nftContract,
+      nft.itemId
+    );
+    await transaction.wait();
+    router.push("/myassets");
   }
 
   if (loadingState === "loaded" && !nfts.length)
@@ -88,12 +101,12 @@ export default function Home({ signer, provider }) {
     <Box sx={{ width: "100%" }} style={{ marginTop: 30, marginBottom: 60 }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {nfts.map((nft, i) => (
-          <Grid key={i} item xs={6} md={4}>
+          <Grid key={i} item xs={12} sm={6} md={4}>
             <Card sx={{ maxWidth: 345 }}>
               <Link href={`/item/${nft.nftContract}/${nft.tokenId}`}>
                 <CardMedia
                   component='img'
-                  height='140'
+                  height='300'
                   image={nft.image}
                   alt={nft.name}
                 />
@@ -114,9 +127,21 @@ export default function Home({ signer, provider }) {
               </CardContent>
 
               <CardActions>
-                <Button size='small' onClick={() => buyNft(nft)}>
-                  Buy
-                </Button>
+                {nft.seller === address ? (
+                  <Button
+                    size='small'
+                    variant='contained'
+                    onClick={() => cancelSell(nft)}>
+                    cancel
+                  </Button>
+                ) : (
+                  <Button
+                    size='small'
+                    variant='contained'
+                    onClick={() => buyNft(nft)}>
+                    Buy
+                  </Button>
+                )}
                 <Link href={`/item/${nft.nftContract}/${nft.tokenId}`}>
                   <Button size='small'>view</Button>
                 </Link>
