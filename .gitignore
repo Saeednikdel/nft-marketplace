@@ -7,6 +7,10 @@
 rinkeby.js
 # testing
 /coverage
+<<<<<<< HEAD
+=======
+/.vscode/
+>>>>>>> parent of 0fdd0bd (artifacts)
 # next.js
 /.next/
 /out/
@@ -39,4 +43,4 @@ typechain
 
 #Hardhat files
 cache
-
+artifacts
