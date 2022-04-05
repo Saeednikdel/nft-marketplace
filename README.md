@@ -1,8 +1,27 @@
-# Basic Sample Hardhat Project
+# Basic NFT MarketPlace using Hardhat and next js
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+in this app you can create NFT collections, mint your own NFTs and sell them on Etherum and pther EVM compatible blockchains
 
-Try running some of the following tasks:
+<br/>
+<p align="center">
+<img src="./Screenshot2.png" width="500" alt="Hardhat NextJS Marketplace">
+</p>
+<br/>
+for installing required libraries run
+
+```shell
+npm install
+```
+
+for starting server run
+
+```shell
+npm run dev
+```
+
+also create a .env file and place your alchamy endpoints there(you should sign in alchamy and create your own project)
+
+following tasks are for working with hardhat:
 
 ```shell
 npx hardhat accounts
