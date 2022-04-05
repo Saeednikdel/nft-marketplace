@@ -14,7 +14,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 const Input = styled("input")({
   display: "none",
 });
-const create = ({ signer }) => {
+const Create = ({ signer }) => {
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
     name: "",
@@ -156,4 +156,4 @@ const create = ({ signer }) => {
     </>
   );
 };
-export default create;
+export default Create;

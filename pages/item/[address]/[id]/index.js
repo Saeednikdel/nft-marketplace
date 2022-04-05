@@ -16,7 +16,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Link from "next/link";
 
-const item = ({ signer, provider }) => {
+const Item = ({ signer, provider }) => {
   const [NFT, setNFT] = useState();
   const router = useRouter();
   const { address, id } = router.query;
@@ -72,4 +72,4 @@ const item = ({ signer, provider }) => {
     </Box>
   );
 };
-export default item;
+export default Item;
