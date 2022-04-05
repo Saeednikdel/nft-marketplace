@@ -1,6 +1,6 @@
 # Basic NFT MarketPlace using Hardhat and next js
 
-in this app you can create NFT collections, mint your own NFTs and sell them on Etherum and pther EVM compatible blockchains
+in this app you can create NFT collections, mint your own NFTs and sell them on Etherum and other EVM compatible blockchains
 
 [Live Demo](https://nft-marketplace-pi-pied.vercel.app/)
 
