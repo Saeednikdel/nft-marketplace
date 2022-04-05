@@ -20,7 +20,7 @@ import { nftmarketaddress } from "../config";
 
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-const Collctions = ({ signer }) => {
+const collctions = ({ signer }) => {
   const [collectionList, setCollectionList] = useState();
   const [openPopup, setOpenPopup] = useState(false);
   const router = useRouter();
@@ -113,4 +113,4 @@ const Collctions = ({ signer }) => {
     </>
   );
 };
-export default Collctions;
+export default collctions;

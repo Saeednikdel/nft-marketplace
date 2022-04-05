@@ -20,7 +20,7 @@ import Popup from "../../../components/Popup";
 import { nftmarketaddress } from "../../../config";
 import Market from "../../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-const Collection = ({ signer, provider }) => {
+const collection = ({ signer, provider }) => {
   const [userOwnsCollectoin, setUserOwnsCollectoin] = useState(false);
   const [NFTs, setNFTs] = useState();
   const [openPopup, setOpenPopup] = useState(false);
@@ -146,4 +146,4 @@ const Collection = ({ signer, provider }) => {
     </Box>
   );
 };
-export default Collection;
+export default collection;

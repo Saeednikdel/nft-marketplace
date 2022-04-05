@@ -18,7 +18,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { useRouter } from "next/router";
 import Popup from "../components/Popup";
 
-const Myassets = ({ signer, provider }) => {
+const myassets = ({ signer, provider }) => {
   const [NFTs, setNFTs] = useState();
   const router = useRouter();
   const [openPopup, setOpenPopup] = useState(false);
@@ -167,4 +167,4 @@ const Myassets = ({ signer, provider }) => {
     </Box>
   );
 };
-export default Myassets;
+export default myassets;
