@@ -8,7 +8,7 @@ config.js
 rinkeby.js
 # testing
 /coverage
-/.vscode/
+vscode
 # next.js
 /.next/
 /out/
@@ -42,4 +42,4 @@ typechain
 
 #Hardhat files
 cache
-artifacts
+
