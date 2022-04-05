@@ -4,15 +4,12 @@
 /node_modules
 /.pnp
 .pnp.js
-# config.js
 rinkeby.js
 # testing
 /coverage
-vscode
 # next.js
 /.next/
 /out/
-
 # production
 /build
 

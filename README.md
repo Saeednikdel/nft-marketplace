@@ -2,6 +2,8 @@
 
 in this app you can create NFT collections, mint your own NFTs and sell them on Etherum and pther EVM compatible blockchains
 
+[Live Demo](https://nft-marketplace-pi-pied.vercel.app/)
+
 <br/>
 <p align="center">
 <img src="./Screenshot2.png" width="500" alt="Hardhat NextJS Marketplace">
